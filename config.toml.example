@@ -1,0 +1,18 @@
+[plugin]
+enabled = true
+config_version = "1.1.0"
+
+[auth]
+# 认证方式：password 使用手机号密码登录，token 使用已有令牌
+auth_method = "token"
+
+# 方式一：密码认证（首次使用自动获取 Token）
+# mobile = "你的手机号"
+# password = "你的密码"
+# area_code = "+86"
+
+# 方式二：Token 认证（24h 有效，可从浏览器 localStorage 获取）
+token = ""
+
+[vision]
+default_prompt = "请描述这张图片的内容"
