@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from .dependencies import get_client_class
+from dependencies import get_client_class
 
 PLUGIN_DIR = Path(__file__).parent
 

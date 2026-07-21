@@ -2,8 +2,14 @@
 
 import base64
 import os
+import sys
 from pathlib import Path
 from typing import ClassVar, Optional
+
+# 确保插件目录在 sys.path 中，以便导入同目录下的模块
+_plugin_dir = str(Path(__file__).parent)
+if _plugin_dir not in sys.path:
+    sys.path.insert(0, _plugin_dir)
 
 from maibot_sdk import MaiBotPlugin, Tool, HookHandler
 from maibot_sdk.types import ToolParameterInfo, ToolParamType

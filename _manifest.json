@@ -5,7 +5,8 @@
   "name": "DeepSeek 识图",
   "description": "使用 DeepSeek Vision API 识别图片内容",
   "author": {
-    "name": "DeepSeek Vision Plugin"
+    "name": "DeepSeek Vision Plugin",
+    "url": "https://github.com/meng201457/deepseek-vision-plugin"
   },
   "license": "MIT",
   "urls": {

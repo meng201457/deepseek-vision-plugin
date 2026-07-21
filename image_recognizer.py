@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
-from .auth import AuthManager
+from auth import AuthManager
 
 
 class ImageRecognizer:
