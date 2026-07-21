@@ -78,8 +78,9 @@ deepseek-vision-plugin/
 │   ├── client.py          # HTTP 客户端
 │   ├── models.py          # 数据模型
 │   └── pow_solver.py      # PoW 挑战求解
-├── wheels/                # Windows 依赖包
-├── wheels_linux/          # Linux 依赖包
+├── wheels/                # 依赖包（按系统分类）
+│   ├── windows/           # Windows 依赖
+│   └── linux/             # Linux 依赖
 └── requirements.txt       # Python 依赖
 ```
 

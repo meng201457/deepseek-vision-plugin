@@ -107,15 +107,18 @@ def _ensure_pip(logger) -> bool:
 def _resolve_wheels_dir() -> Path:
     """根据平台选择合适的 wheels 目录。"""
     is_64 = struct.calcsize("P") * 8 == 64
+    base = PLUGIN_DIR / "wheels"
 
     if sys.platform == "win32":
-        return PLUGIN_DIR / "wheels"
+        target = base / "windows"
     elif sys.platform == "linux" and is_64:
-        linux_dir = PLUGIN_DIR / "wheels_linux"
-        if linux_dir.exists():
-            return linux_dir
+        target = base / "linux"
+    else:
+        target = base / "windows"
 
-    return PLUGIN_DIR / "wheels"
+    if target.exists():
+        return target
+    return base
 
 
 def _install_from_wheels(wheels_dir: Path, logger) -> bool:
