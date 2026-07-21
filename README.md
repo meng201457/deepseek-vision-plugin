@@ -1,6 +1,6 @@
 # DeepSeek Vision Plugin for MaiBot
 
-> **⚠️ 本项目完全由 AI 编写（OpenCode + MiMo），人类仅提供需求和测试。**
+> 使用 DeepSeek 网页 API 识别图片内容，替代 MaiBot 默认 VLM 流程。
 
 ## 功能
 
@@ -9,35 +9,34 @@
 - 支持密码和 Token 两种认证方式（Token 24h 有效，自动刷新）
 - WebUI 配置页面（开关、认证、提示词）
 - 手动调用 Tool `deepseek_vision`
+- 依赖自动安装（内置 wheels，支持 Windows/Linux）
 
 ## 安装
 
-1. 将 `deepseek-vision` 目录复制到 MaiBot 的 `plugins/` 目录
-2. 安装依赖：
-   ```bash
-   pip install deepseek-pow wasmtime
-   ```
-3. 编辑 `config.toml` 配置认证信息
-4. 重启 MaiBot 或等待热加载
+1. 将整个 `deepseek-vision-plugin` 目录复制到 MaiBot 的 `plugins/` 目录
+2. 复制 `config.toml.example` 为 `config.toml`，填写认证信息
+3. 重启 MaiBot 或等待热加载
+
+依赖会在首次加载时自动安装，无需手动操作。
 
 ## 配置
 
-编辑 `config.toml`：
+复制 `config.toml.example` 为 `config.toml`：
 
 ```toml
 [plugin]
 enabled = true
 
 [auth]
-# 方式一：密码认证（首次使用自动获取 Token）
-auth_method = "mobile"
-mobile = "你的手机号"
-password = "你的密码"
-area_code = "+86"
+# 方式一：Token 认证（推荐，可从浏览器 localStorage 获取）
+auth_method = "token"
+token = "你的token"
 
-# 方式二：Token 认证（24h 有效）
-# auth_method = "token"
-# token = "你的token"
+# 方式二：密码认证（首次使用自动获取 Token）
+# auth_method = "password"
+# mobile = "你的手机号"
+# password = "你的密码"
+# area_code = "+86"
 
 [vision]
 default_prompt = "请描述这张图片的内容"
@@ -64,17 +63,40 @@ default_prompt = "请描述这张图片的内容"
 - **VLM 队列管理**：处理完图片后取消 MaiBot 的 VLM 后台任务，避免死循环
 - **Token 自动刷新**：Token 过期时自动用密码重新登录
 
+## 项目结构
+
+```
+deepseek-vision-plugin/
+├── plugin.py              # 插件入口（Hook + Tool 声明）
+├── auth.py                # 登录、token 管理与刷新
+├── dependencies.py        # 依赖检查与自动安装
+├── image_recognizer.py    # 图片识别逻辑
+├── vlm_config.py          # VLM 配置段管理
+├── config.py              # WebUI 配置模型
+├── config.toml.example    # 配置模板
+├── deepseek_vision/       # DeepSeek API 核心 SDK
+│   ├── client.py          # HTTP 客户端
+│   ├── models.py          # 数据模型
+│   └── pow_solver.py      # PoW 挑战求解
+├── wheels/                # Windows 依赖包
+├── wheels_linux/          # Linux 依赖包
+└── requirements.txt       # Python 依赖
+```
+
 ## 依赖
+
+运行时依赖会自动安装：
 
 - `requests>=2.28.0`
 - `deepseek-pow>=0.0.1`
-- `wasmtime`（deepseek-pow 的依赖）
+- `wasmtime>=1.0.0`
 
 ## 注意事项
 
 - DeepSeek Token 有效期约 24 小时，首次使用会自动登录获取
 - 图片识别使用 DeepSeek 的网页接口，非官方 API
 - 需要 DeepSeek 账号
+- `config.toml` 包含敏感信息，已通过 `.gitignore` 排除，不会提交到仓库
 
 ## License
 
