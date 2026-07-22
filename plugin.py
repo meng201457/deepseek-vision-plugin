@@ -30,6 +30,8 @@ class DeepSeekVisionPlugin(MaiBotPlugin):
 
     VLM_MODEL_NAME = "deepseek-vision-plugin"
 
+    _vision_cache: dict = {}  # message_hash -> description (hook 与 tool 共享)
+
     async def on_load(self) -> None:
         """插件加载：初始化依赖、客户端、VLM 配置。"""
         self.ctx.logger.info("DeepSeek Vision 插件已加载")
@@ -83,6 +85,19 @@ class DeepSeekVisionPlugin(MaiBotPlugin):
             self.ctx.logger.warning("DeepSeek 未返回图片描述")
             return
 
+        # 提取消息哈希，用于缓存描述供 tool 使用
+        message_hash = None
+        for key in ["message_id", "id", "msg_id", "hash"]:
+            if key in message:
+                message_hash = str(message[key])
+                break
+        if message_hash:
+            self._vision_cache[message_hash] = description
+            if len(self._vision_cache) > 100:
+                keys = list(self._vision_cache.keys())
+                for k in keys[:50]:
+                    del self._vision_cache[k]
+
         # 替换 raw_message 中的图片为文本描述
         if isinstance(raw_message, list):
             for i, component in enumerate(raw_message):
@@ -123,6 +138,11 @@ class DeepSeekVisionPlugin(MaiBotPlugin):
     )
     async def handle_vision(self, image_url: str, prompt: str = "", **kwargs):
         """手动调用图片识别的 Tool。"""
+        # 优先从缓存获取（hook 已处理的图片）
+        if image_url in self._vision_cache:
+            self.ctx.logger.info("从缓存返回图片描述: %s", image_url)
+            return {"success": True, "result": self._vision_cache[image_url]}
+
         if not self._auth.client:
             return {"success": False, "error": "client_not_initialized"}
 
