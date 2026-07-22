@@ -97,7 +97,6 @@ deepseek-vision-plugin/
 - DeepSeek Token 有效期约 24 小时，首次使用会自动登录获取
 - 图片识别使用 DeepSeek 的网页接口，非官方 API
 - 需要 DeepSeek 账号
-- `config.toml` 包含敏感信息，已通过 `.gitignore` 排除，不会提交到仓库
 
 ## License
 
