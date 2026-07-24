@@ -9,7 +9,7 @@
 - 支持密码和 Token 两种认证方式（Token 24h 有效，自动刷新）
 - WebUI 配置页面（开关、认证、提示词）
 - 手动调用 Tool `deepseek_vision`
-- 依赖自动安装（内置 wheels，支持 Windows/Linux）
+- 依赖由 MaiBot 自动安装
 
 ## 安装
 
@@ -17,7 +17,7 @@
 2. 复制 `config.toml.example` 为 `config.toml`，填写认证信息
 3. 重启 MaiBot 或等待热加载
 
-依赖会在首次加载时自动安装，无需手动操作。
+依赖（`deepseek-pow`、`wasmtime`）会在首次加载时由 MaiBot 自动安装。
 
 ## 配置
 
@@ -69,28 +69,37 @@ default_prompt = "请描述这张图片的内容"
 deepseek-vision-plugin/
 ├── plugin.py              # 插件入口（Hook + Tool 声明）
 ├── auth.py                # 登录、token 管理与刷新
-├── dependencies.py        # 依赖检查与自动安装
+├── dependencies.py        # 依赖检查
 ├── image_recognizer.py    # 图片识别逻辑
 ├── vlm_config.py          # VLM 配置段管理
 ├── config.py              # WebUI 配置模型
 ├── config.toml.example    # 配置模板
-├── deepseek_vision/       # DeepSeek API 核心 SDK
-│   ├── client.py          # HTTP 客户端
-│   ├── models.py          # 数据模型
-│   └── pow_solver.py      # PoW 挑战求解
-├── wheels/                # 依赖包（按系统分类）
-│   ├── windows/           # Windows 依赖
-│   └── linux/             # Linux 依赖
-└── requirements.txt       # Python 依赖
+├── _manifest.json         # 插件清单（声明依赖）
+└── deepseek_vision/       # DeepSeek API 核心 SDK
+    ├── client.py          # HTTP 客户端
+    ├── models.py          # 数据模型
+    └── pow_solver.py      # PoW 挑战求解
 ```
 
 ## 依赖
 
-运行时依赖会自动安装：
+由 MaiBot 自动安装（通过 `_manifest.json` 声明）：
 
-- `requests>=2.28.0`
 - `deepseek-pow>=0.0.1`
 - `wasmtime>=1.0.0`
+
+## 更新日志
+
+### v1.5.0 (2025-07-25)
+- 使用 MaiBot 内置依赖安装机制，移除本地 wheels
+- 添加 Hook 与 Tool 之间的图片描述缓存，避免重复识别
+
+### v1.4.0 (2025-07-22)
+- 重构插件结构，拆分为多个模块
+- 添加缓存机制解决 hook 与 tool 之间的图片描述共享问题
+
+### v1.0.0 (2025-07-20)
+- 初始版本，支持 DeepSeek 网页 API 图片识别
 
 ## 注意事项
 

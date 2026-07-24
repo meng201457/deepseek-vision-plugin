@@ -15,7 +15,7 @@ from maibot_sdk import MaiBotPlugin, Tool, HookHandler
 from maibot_sdk.types import ToolParameterInfo, ToolParamType
 
 from auth import AuthManager
-from dependencies import ensure_dependencies, is_available
+from dependencies import ensure_dependencies
 from image_recognizer import ImageRecognizer
 from vlm_config import ensure_vlm_config
 
