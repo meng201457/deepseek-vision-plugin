@@ -20,7 +20,18 @@
     "min_version": "2.0.0",
     "max_version": "2.99.99"
   },
-  "dependencies": [],
+  "dependencies": [
+    {
+      "type": "python_package",
+      "name": "deepseek-pow",
+      "version_spec": ">=0.0.1"
+    },
+    {
+      "type": "python_package",
+      "name": "wasmtime",
+      "version_spec": ">=1.0.0"
+    }
+  ],
   "capabilities": [
     "send.text",
     "config.get"
